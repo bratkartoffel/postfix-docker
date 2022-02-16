@@ -1,0 +1,11 @@
+#!/bin/ash
+set -e
+
+readonly PID_FILE="/var/spool/postfix/pid/master.pid"
+
+[[ -e "$PID_FILE" ]] && rm -v "$PID_FILE"
+
+exec /usr/libexec/postfix/master -c "$APP_CONF_DIR" -d
+
+# vim: set ft=bash ts=2 sts=2 expandtab:
+
