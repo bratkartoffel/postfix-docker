@@ -14,7 +14,7 @@ set -o errexit -o pipefail
 : "${APP_CONF_DIR:=/etc/postfix}"
 
 # export configuration
-export APP_UID APP_GID APP_UMASK APP_USER APP_GROUP APP_HOME APP_DATA_DIR APP_CONF_DIR
+export APP_CONF_DIR APP_HOME APP_USER APP_GROUP
 
 # invoked as root, add user and prepare container
 if [ "$(id -u)" -eq 0 ]; then
@@ -26,10 +26,12 @@ if [ "$(id -u)" -eq 0 ]; then
   addgroup -g "$APP_GID" "$APP_GROUP"
   adduser -HD -h "$APP_HOME" -s /sbin/nologin -G "$APP_GROUP" -u "$APP_UID" -k /dev/null "$APP_USER"
 
-  echo ">> fixing owner of $APP_CONF_DIR"
-  install -dm 0750 -o "$APP_USER" -g "$APP_GROUP" "$APP_HOME"
-  install -dm 0750 -o "$APP_USER" -g "$APP_GROUP" "$APP_CONF_DIR"
-  chown -R "$APP_USER":"$APP_GROUP" "$APP_HOME" "$APP_DATA_DIR" /etc/s6
+  echo ">> fixing permissions"
+  install -dm 0750 -o "$APP_USER" -g "$APP_GROUP" "$APP_HOME" "$APP_CONF_DIR"
+  chown -R "$APP_USER":"$APP_GROUP" \
+          "$APP_HOME" \
+          "$APP_DATA_DIR" \
+          /etc/s6
   chown -R root:"$APP_GROUP" "$APP_CONF_DIR"
 
   echo ">> create link for syslog redirection"

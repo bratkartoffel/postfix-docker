@@ -9,5 +9,12 @@ RUN apk upgrade --no-cache \
 # add the custom configurations
 COPY rootfs/ /
 
+# spooled mails should not be lost
+VOLUME /var/spool/postfix
+
+# 25: smtp
+# 587: submission
+EXPOSE 25/tcp 587/tcp
+
 CMD [ "/entrypoint.sh" ]
 
