@@ -4,7 +4,7 @@ FROM alpine:3.19
 RUN apk upgrade --no-cache \
         && apk add --no-cache \
         postfix postfix-pgsql postfix-mysql postfix-pcre postfix-policyd-spf-perl \
-        s6 setpriv
+        s6 setpriv tzdata
 
 # add the custom configurations
 COPY rootfs/ /
