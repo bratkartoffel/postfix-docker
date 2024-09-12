@@ -36,7 +36,8 @@ if [ "$(id -u)" -eq 0 ]; then
 
   echo ">> create link for syslog redirection"
   install -dm 0750 -o "$APP_USER" -g "$APP_GROUP" /run/syslogd
-  ln -s /run/syslogd/syslogd.sock /dev/log
+  [[ -h /dev/log ]] && rm -v /dev/log
+  ln -sfv /run/syslogd/syslogd.sock /dev/log
 fi
 
 # tighten umask for newly created files / dirs
